@@ -1,10 +1,10 @@
-import metrics/gauge.{new_gauge, set_gauge}
+import metrics/gauge.{create_gauge, set_gauge}
 
 const registry_name = "gauge_test_registry"
 
-pub fn new_gauge_test() {
+pub fn create_gauge_test() {
   let assert Ok(_) =
-    new_gauge(
+    create_gauge(
       registry: registry_name,
       name: "test",
       help: "test gauge",
@@ -12,7 +12,7 @@ pub fn new_gauge_test() {
     )
 
   let assert Error("Metric already exists") =
-    new_gauge(
+    create_gauge(
       registry: registry_name,
       name: "test",
       help: "test gauge",
@@ -22,7 +22,7 @@ pub fn new_gauge_test() {
 
 pub fn gauge_set_test() {
   let assert Ok(_) =
-    new_gauge(
+    create_gauge(
       registry: registry_name,
       name: "ok",
       help: "basic gauge",
@@ -44,7 +44,7 @@ pub fn gauge_set_non_existing_gauge_test() {
 
 pub fn gauge_set_with_labels() {
   let assert Ok(_) =
-    new_gauge(
+    create_gauge(
       registry: registry_name,
       name: "with_labels",
       help: "metric with labels",

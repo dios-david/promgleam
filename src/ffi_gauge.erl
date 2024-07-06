@@ -1,11 +1,11 @@
 -module(ffi_gauge).
 
 -export([
-  gauge_new/4,
-  gauge_set/4
+  create_gauge/4,
+  set_gauge/4
 ]).
 
-gauge_new(Registry, Name, Help, Labels) ->
+create_gauge(Registry, Name, Help, Labels) ->
   try prometheus_gauge:new([
     { registry, Registry },
     { name, Name },
@@ -18,7 +18,7 @@ gauge_new(Registry, Name, Help, Labels) ->
     _:_ -> { error, unknown_error }
   end.
 
-gauge_set(Registry, Name, LabelValues, Value) ->
+set_gauge(Registry, Name, LabelValues, Value) ->
   try prometheus_gauge:set(Registry, Name, LabelValues, Value) of
     _ -> { ok, nil }
   catch

@@ -1,6 +1,6 @@
 -module(ffi_buckets).
 
--import(lists,[droplast/1]).
+-import(lists, [droplast/1]).
 
 -export([
   exponential/3,

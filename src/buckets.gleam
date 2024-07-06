@@ -1,5 +1,7 @@
+//// Utility functions to generate buckets for Histogram metrics.
+
 import gleam/string.{from_utf_codepoints}
-import prometheus_error.{type PrometheusError, InvalidValue}
+import internal/prometheus_error.{type PrometheusError, InvalidValue}
 
 pub type Buckets =
   List(Float)
@@ -41,9 +43,8 @@ fn ffi_linear(
   count: Int,
 ) -> Result(Buckets, PrometheusError)
 
-/// Creates `Count' buckets, each `Width' wide, where the lowest
-/// bucket has an upper bound of `Start'. The returned list is meant to be
-/// used for the `buckets' key of histogram constructors options.
+/// Creates `count` buckets, each `step` wide, where the lowest bucket has an upper bound of
+/// `start`.
 ///
 /// # Examples
 ///

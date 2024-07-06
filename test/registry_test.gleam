@@ -1,11 +1,10 @@
 import birdie.{snap}
 import buckets.{exponential}
-import metrics/counter.{inc_counter, new_counter}
-import metrics/gauge.{new_gauge, set_gauge}
-import metrics/histogram.{new_histogram, observe_histogram}
+import metrics/counter.{create_counter, increment_counter}
+import metrics/gauge.{create_gauge, set_gauge}
+import metrics/histogram.{create_histogram, observe_histogram}
 import pprint.{format}
-import print.{print_as_protobuf, print_as_text}
-import registry.{clear_registry}
+import registry.{clear_registry, print_as_protobuf, print_as_text}
 
 const counter_name = "my_counter"
 
@@ -19,21 +18,21 @@ pub fn print_as_text_test() {
   clear_registry(registry_name)
 
   let assert Ok(_) =
-    new_counter(
+    create_counter(
       registry: registry_name,
       name: counter_name,
       help: "my counter help text",
       labels: ["wibble", "wobble"],
     )
   let assert Ok(_) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: counter_name,
       labels: ["A", "B"],
       value: 1,
     )
   let assert Ok(_) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: counter_name,
       labels: ["C", "D"],
@@ -41,7 +40,7 @@ pub fn print_as_text_test() {
     )
 
   let assert Ok(_) =
-    new_gauge(
+    create_gauge(
       registry: registry_name,
       name: gauge_name,
       help: "my gauge help text",
@@ -58,7 +57,7 @@ pub fn print_as_text_test() {
   let assert Ok(buckets) = exponential(1.0, 2, 3)
 
   let assert Ok(_) =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: histogram_name,
       help: "my histogram help text",
@@ -83,21 +82,21 @@ pub fn print_as_protobuf_test() {
   clear_registry(registry_name)
 
   let assert Ok(_) =
-    new_counter(
+    create_counter(
       registry: registry_name,
       name: counter_name,
       help: "metric with labels",
       labels: ["wibble", "wobble"],
     )
   let assert Ok(_) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: counter_name,
       labels: ["A", "B"],
       value: 1,
     )
   let assert Ok(_) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: counter_name,
       labels: ["C", "D"],

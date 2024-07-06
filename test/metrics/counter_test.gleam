@@ -1,10 +1,10 @@
-import metrics/counter.{inc_counter, new_counter}
+import metrics/counter.{create_counter, increment_counter}
 
 const registry_name = "counter_test_registry"
 
-pub fn new_counter_test() {
+pub fn create_counter_test() {
   let assert Ok(_) =
-    new_counter(
+    create_counter(
       registry: registry_name,
       name: "test",
       help: "test counter",
@@ -12,7 +12,7 @@ pub fn new_counter_test() {
     )
 
   let assert Error("Metric already exists") =
-    new_counter(
+    create_counter(
       registry: registry_name,
       name: "test",
       help: "test counter",
@@ -20,21 +20,21 @@ pub fn new_counter_test() {
     )
 }
 
-pub fn counter_inc_test() {
+pub fn counter_increment_test() {
   let assert Ok(_) =
-    new_counter(
+    create_counter(
       registry: registry_name,
       name: "ok",
       help: "basic counter",
       labels: [],
     )
   let assert Ok(_) =
-    inc_counter(registry: registry_name, name: "ok", labels: [], value: 1)
+    increment_counter(registry: registry_name, name: "ok", labels: [], value: 1)
 }
 
-pub fn counter_inc_non_existing_counter_test() {
+pub fn counter_increment_non_existing_counter_test() {
   let assert Error("Unknown metric: non_existing_counter") =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: "non_existing_counter",
       labels: [],
@@ -42,16 +42,16 @@ pub fn counter_inc_non_existing_counter_test() {
     )
 }
 
-pub fn counter_inc_with_labels() {
+pub fn counter_increment_with_labels() {
   let assert Ok(_) =
-    new_counter(
+    create_counter(
       registry: registry_name,
       name: "with_labels",
       help: "metric with labels",
       labels: ["wibble", "wobble"],
     )
   let assert Ok(_) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: "with_labels",
       labels: ["A", "B"],
@@ -61,7 +61,7 @@ pub fn counter_inc_with_labels() {
   let assert Error(
     "Invalid metric arity (labels mismatch): given 0, expected 2",
   ) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: "with_labels",
       labels: [],
@@ -71,7 +71,7 @@ pub fn counter_inc_with_labels() {
   let assert Error(
     "Invalid metric arity (labels mismatch): given 1, expected 2",
   ) =
-    inc_counter(
+    increment_counter(
       registry: registry_name,
       name: "with_labels",
       labels: ["A"],

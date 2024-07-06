@@ -4,6 +4,12 @@ description = "A Prometheus client library for Gleam"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "dios-david", repo = "promgleam" }
 target = "erlang"
+internal_modules = [
+  "internal",
+  "internal/*",
+  "promgleam/internal",
+  "promgleam/internal/*"
+]
 
 [dependencies]
 gleam_erlang = ">= 0.25.0 and < 1.0.0"

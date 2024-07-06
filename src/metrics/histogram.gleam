@@ -1,13 +1,16 @@
+//// A histogram samples observations (usually things like request durations or response sizes)
+//// and counts them in configurable buckets. It also provides a sum of all observed values.
+
 import buckets.{type Buckets}
 import gleam/int.{to_string}
 import gleam/string.{from_utf_codepoints}
-import prometheus_error.{
+import internal/prometheus_error.{
   type PrometheusError, InvalidBuckets, InvalidMetricArity, MfAlreadyExists,
   NoBuckets, UnknownMetric,
 }
 
-@external(erlang, "ffi_histogram", "histogram_new")
-fn ffi_new_histogram(
+@external(erlang, "ffi_histogram", "create_histogram")
+fn ffi_create_histogram(
   registry: String,
   name: String,
   help: String,
@@ -15,14 +18,27 @@ fn ffi_new_histogram(
   buckets: Buckets,
 ) -> Result(Nil, PrometheusError)
 
-pub fn new_histogram(
+/// Creates a new Histogram metric.
+///
+/// # Examples
+///
+/// ```gleam
+/// create_histogram(
+///   registry: "default",
+///   name: "http_request_duration_seconds",
+///   help: "Duration of HTTP requests in seconds",
+///   labels: [ "method", "route", "status" ],
+///   buckets: [ 0.1, 0.25, 0.5, 1.0, 1.5 ],
+/// )
+/// ```
+pub fn create_histogram(
   registry registry: String,
   name name: String,
   help help: String,
   labels labels: List(String),
   buckets buckets: Buckets,
 ) -> Result(Nil, String) {
-  let result = ffi_new_histogram(registry, name, help, labels, buckets)
+  let result = ffi_create_histogram(registry, name, help, labels, buckets)
 
   case result {
     Ok(_) -> Ok(Nil)
@@ -34,7 +50,7 @@ pub fn new_histogram(
   }
 }
 
-@external(erlang, "ffi_histogram", "histogram_observe")
+@external(erlang, "ffi_histogram", "observe_histogram")
 fn ffi_observe_histogram(
   registry: String,
   name: String,
@@ -42,6 +58,18 @@ fn ffi_observe_histogram(
   value: Float,
 ) -> Result(Nil, PrometheusError)
 
+/// Observes a value in the Histogram.
+///
+/// # Examples
+///
+/// ```gleam
+/// observe_histogram(
+///   registry: "default",
+///   name: "http_request_duration_seconds",
+///   labels: [ "GET", "/", "200" ],
+///   value: 0.23,
+/// )
+/// ```
 pub fn observe_histogram(
   registry registry: String,
   name name: String,

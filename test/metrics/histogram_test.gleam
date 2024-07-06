@@ -1,10 +1,10 @@
-import metrics/histogram.{new_histogram, observe_histogram}
+import metrics/histogram.{create_histogram, observe_histogram}
 
 const registry_name = "histogram_test_registry"
 
-pub fn new_histogram_test() {
+pub fn create_histogram_test() {
   let assert Ok(_) =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: "test",
       help: "test histogram",
@@ -13,7 +13,7 @@ pub fn new_histogram_test() {
     )
 
   let assert Error("Metric already exists") =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: "test",
       help: "test histogram",
@@ -22,7 +22,7 @@ pub fn new_histogram_test() {
     )
 
   let assert Error("No buckets were provided") =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: "test2",
       help: "test histogram",
@@ -31,7 +31,7 @@ pub fn new_histogram_test() {
     )
 
   let assert Error("Invalid buckets: buckets not sorted") =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: "test3",
       help: "test histogram",
@@ -42,7 +42,7 @@ pub fn new_histogram_test() {
 
 pub fn histogram_observe_test() {
   let assert Ok(_) =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: "ok",
       help: "basic histogram",
@@ -70,7 +70,7 @@ pub fn histogram_observe_non_existing_histogram_test() {
 
 pub fn histogram_observe_with_labels() {
   let assert Ok(_) =
-    new_histogram(
+    create_histogram(
       registry: registry_name,
       name: "with_labels",
       help: "metric with labels",

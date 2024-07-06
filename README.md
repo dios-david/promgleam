@@ -19,16 +19,16 @@ gleam add promgleam
 [(Source)](https://prometheus.io/docs/concepts/metric_types/#counter)
 
 ```gleam
-import promgleam/metrics/counter.{new_counter, inc_counter}
+import promgleam/metrics/counter.{create_counter, increment_counter}
 
-new_counter(
+create_counter(
   registry: "default",
   name: "http_requests_total",
   help: "Total number of HTTP requests",
   labels: [ "method", "route", "status" ],
 )
 
-inc_counter(
+increment_counter(
   registry: "default",
   name: "http_requests_total",
   labels: [ "GET", "/", "200" ],
@@ -43,19 +43,19 @@ Gauges are typically used for measured values like temperatures or current memor
 [(Source)](https://prometheus.io/docs/concepts/metric_types/#gauge)
 
 ```gleam
-import promgleam/metrics/gauge.{new_gauge, set_gauge}
+import promgleam/metrics/gauge.{create_gauge, set_gauge}
 
-new_gauge(
+create_gauge(
   registry: "default",
   name: "cache_size",
   help: "Number of items in the cache",
   labels: [ "cache_name" ],
 )
 
-inc_counter(
+set_gauge(
   registry: "default",
   name: "cache_size",
-  labels: [ "users" ],
+  labels: [ "image_cache" ],
   value: 123,
 )
 ```
@@ -66,14 +66,14 @@ inc_counter(
 [(Source)](https://prometheus.io/docs/concepts/metric_types/#histogram)
 
 ```gleam
-import promgleam/metrics/histogram.{new_histogram, observe_histogram}
+import promgleam/metrics/histogram.{create_histogram, observe_histogram}
 
-new_histogram(
+create_histogram(
   registry: "default",
   name: "http_request_duration_seconds",
   help: "Duration of HTTP requests in seconds",
   labels: [ "method", "route", "status" ],
-  buckets: [ 0.1, 0.25, 0.5, 1.0, 1.5 ]
+  buckets: [ 0.1, 0.25, 0.5, 1.0, 1.5 ],
 )
 
 observe_histogram(
@@ -91,17 +91,17 @@ This library provides utility functions to create `buckets` for a Histogram:
 ```gleam
 import promgleam/buckets.{exponential, linear}
 
-exponential(start: 1.0, factor: 2, count: 5) // [1.0, 2.0, 4.0, 8.0, 10.0]
-linear(start: 1.0, step: 3.0, count: 4) // [1.0, 4.0, 7.0, 10.0]
+exponential(start: 1.0, factor: 2, count: 5) // Ok([1.0, 2.0, 4.0, 8.0, 10.0])
+linear(start: 1.0, step: 3.0, count: 4) // Ok([1.0, 4.0, 7.0, 10.0])
 ```
-### Printing the content of a metric registry
+### Printing the contents of a metric registry
 
 This can be done by using one of the `print_as` functions:
-- `print_as_text` - Returns a `String` using the [Prometheus text-based format](https://github.com/prometheus/docs/blob/main/content/docs/instrumenting/exposition_formats.md#text-format-example)
-- `print_as_prometheus` - Returns a `BitArray` using the [Prometheus Protobuf format](https://github.com/prometheus/docs/blob/main/content/docs/instrumenting/exposition_formats.md#protobuf-format)
+- `print_as_text` - Serialises the registry using the [Prometheus text-based format](https://github.com/prometheus/docs/blob/main/content/docs/instrumenting/exposition_formats.md#text-format-example) into a `String`
+- `print_as_prometheus` - Serialises the registry using the [Prometheus Protobuf format](https://github.com/prometheus/docs/blob/main/content/docs/instrumenting/exposition_formats.md#protobuf-format) into a `BitArray`
 
 ```gleam
-import promgleam/print.{print_as_text, print_as_protobuf}
+import promgleam/registry.{print_as_text, print_as_protobuf}
 
 print_as_text(registry_name: "default")
 print_as_protobuf(registry_name: "default")
