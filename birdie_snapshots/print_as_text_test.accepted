@@ -1,0 +1,22 @@
+---
+version: 1.1.7
+title: print_as_text_test
+file: ./test/print_test.gleam
+test_name: print_as_text_test
+---
+# TYPE my_counter counter
+# HELP my_counter my counter help text
+my_counter{wibble="C",wobble="D"} 2
+my_counter{wibble="A",wobble="B"} 1
+# TYPE my_gauge gauge
+# HELP my_gauge my gauge help text
+my_gauge{wibble="A",wobble="B"} 1
+# TYPE my_histogram histogram
+# HELP my_histogram my histogram help text
+my_histogram_bucket{wibble="A",wobble="B",le="1.00000000000000000000e+00"} 0
+my_histogram_bucket{wibble="A",wobble="B",le="2.00000000000000000000e+00"} 0
+my_histogram_bucket{wibble="A",wobble="B",le="4.00000000000000000000e+00"} 1
+my_histogram_bucket{wibble="A",wobble="B",le="+Inf"} 1
+my_histogram_count{wibble="A",wobble="B"} 1
+my_histogram_sum{wibble="A",wobble="B"} 3.45
+

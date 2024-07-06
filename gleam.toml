@@ -1,0 +1,16 @@
+name = "gleam_prometheus"
+version = "0.1.0"
+description = "A Prometheus client library for Gleam"
+licences = ["Apache-2.0"]
+repository = { type = "github", user = "dios-david", repo = "gleam_prometheus" }
+target = "erlang"
+
+[dependencies]
+gleam_erlang = ">= 0.25.0 and < 1.0.0"
+gleam_stdlib = ">= 0.34.0 and < 2.0.0"
+prometheus = ">= 4.11.0 and < 5.0.0"
+
+[dev-dependencies]
+birdie = ">= 1.1.6 and < 2.0.0"
+gleeunit = ">= 1.0.0 and < 2.0.0"
+pprint = ">= 1.0.3 and < 2.0.0"
