@@ -1,4 +1,4 @@
-import metrics/histogram.{create_histogram, observe_histogram}
+import promgleam/metrics/histogram.{create_histogram, observe_histogram}
 
 const registry_name = "histogram_test_registry"
 

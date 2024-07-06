@@ -1,57 +1,57 @@
-import metrics/counter.{create_counter, increment_counter}
+import promgleam/metrics/gauge.{create_gauge, set_gauge}
 
-const registry_name = "counter_test_registry"
+const registry_name = "gauge_test_registry"
 
-pub fn create_counter_test() {
+pub fn create_gauge_test() {
   let assert Ok(_) =
-    create_counter(
+    create_gauge(
       registry: registry_name,
       name: "test",
-      help: "test counter",
+      help: "test gauge",
       labels: [],
     )
 
   let assert Error("Metric already exists") =
-    create_counter(
+    create_gauge(
       registry: registry_name,
       name: "test",
-      help: "test counter",
+      help: "test gauge",
       labels: [],
     )
 }
 
-pub fn counter_increment_test() {
+pub fn gauge_set_test() {
   let assert Ok(_) =
-    create_counter(
+    create_gauge(
       registry: registry_name,
       name: "ok",
-      help: "basic counter",
+      help: "basic gauge",
       labels: [],
     )
   let assert Ok(_) =
-    increment_counter(registry: registry_name, name: "ok", labels: [], value: 1)
+    set_gauge(registry: registry_name, name: "ok", labels: [], value: 1)
 }
 
-pub fn counter_increment_non_existing_counter_test() {
-  let assert Error("Unknown metric: non_existing_counter") =
-    increment_counter(
+pub fn gauge_set_non_existing_gauge_test() {
+  let assert Error("Unknown metric: non_existing_gauge") =
+    set_gauge(
       registry: registry_name,
-      name: "non_existing_counter",
+      name: "non_existing_gauge",
       labels: [],
       value: 1,
     )
 }
 
-pub fn counter_increment_with_labels() {
+pub fn gauge_set_with_labels() {
   let assert Ok(_) =
-    create_counter(
+    create_gauge(
       registry: registry_name,
       name: "with_labels",
       help: "metric with labels",
       labels: ["wibble", "wobble"],
     )
   let assert Ok(_) =
-    increment_counter(
+    set_gauge(
       registry: registry_name,
       name: "with_labels",
       labels: ["A", "B"],
@@ -61,7 +61,7 @@ pub fn counter_increment_with_labels() {
   let assert Error(
     "Invalid metric arity (labels mismatch): given 0, expected 2",
   ) =
-    increment_counter(
+    set_gauge(
       registry: registry_name,
       name: "with_labels",
       labels: [],
@@ -71,7 +71,7 @@ pub fn counter_increment_with_labels() {
   let assert Error(
     "Invalid metric arity (labels mismatch): given 1, expected 2",
   ) =
-    increment_counter(
+    set_gauge(
       registry: registry_name,
       name: "with_labels",
       labels: ["A"],
