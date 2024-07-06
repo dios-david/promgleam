@@ -1,10 +1,10 @@
 //// A histogram samples observations (usually things like request durations or response sizes)
 //// and counts them in configurable buckets. It also provides a sum of all observed values.
 
-import buckets.{type Buckets}
 import gleam/int.{to_string}
 import gleam/string.{from_utf_codepoints}
-import internal/prometheus_error.{
+import promgleam/buckets.{type Buckets}
+import promgleam/internal/prometheus_error.{
   type PrometheusError, InvalidBuckets, InvalidMetricArity, MfAlreadyExists,
   NoBuckets, UnknownMetric,
 }

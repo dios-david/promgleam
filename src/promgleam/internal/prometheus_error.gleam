@@ -1,4 +1,4 @@
-import internal/never.{type Never}
+import promgleam/internal/never.{type Never}
 
 pub type PrometheusError {
   InvalidBuckets(buckets: List(Float), reason: List(UtfCodepoint))

@@ -1,10 +1,10 @@
 import birdie.{snap}
-import buckets.{exponential}
-import metrics/counter.{create_counter, increment_counter}
-import metrics/gauge.{create_gauge, set_gauge}
-import metrics/histogram.{create_histogram, observe_histogram}
 import pprint.{format}
-import registry.{clear_registry, print_as_protobuf, print_as_text}
+import promgleam/buckets.{exponential}
+import promgleam/metrics/counter.{create_counter, increment_counter}
+import promgleam/metrics/gauge.{create_gauge, set_gauge}
+import promgleam/metrics/histogram.{create_histogram, observe_histogram}
+import promgleam/registry.{clear_registry, print_as_protobuf, print_as_text}
 
 const counter_name = "my_counter"
 

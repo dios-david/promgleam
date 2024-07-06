@@ -5,7 +5,7 @@
 //// also "counts" that can go up and down, like the number of concurrent requests.
 
 import gleam/int.{to_string}
-import internal/prometheus_error.{
+import promgleam/internal/prometheus_error.{
   type PrometheusError, InvalidMetricArity, MfAlreadyExists, UnknownMetric,
 }
 

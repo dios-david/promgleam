@@ -1,7 +1,7 @@
 //// Utility functions to generate buckets for Histogram metrics.
 
 import gleam/string.{from_utf_codepoints}
-import internal/prometheus_error.{type PrometheusError, InvalidValue}
+import promgleam/internal/prometheus_error.{type PrometheusError, InvalidValue}
 
 pub type Buckets =
   List(Float)

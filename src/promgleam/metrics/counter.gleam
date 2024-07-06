@@ -6,7 +6,7 @@
 //// the number of currently running processes; instead use a gauge.
 
 import gleam/int.{to_string}
-import internal/prometheus_error.{
+import promgleam/internal/prometheus_error.{
   type PrometheusError, InvalidMetricArity, MfAlreadyExists, UnknownMetric,
 }
 

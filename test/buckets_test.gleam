@@ -1,4 +1,4 @@
-import buckets.{exponential, linear}
+import promgleam/buckets.{exponential, linear}
 
 pub fn exponential_buckets_test() {
   let assert Ok([1.0, 2.0, 4.0, 8.0, 16.0]) =
