@@ -1,14 +1,14 @@
-# Gleam Prometheus
+# PromGleam
 
-[![Package Version](https://img.shields.io/hexpm/v/gleam_prometheus)](https://hex.pm/packages/glegleam_prometheusamprom)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glegleam_prometheusamprom/)
+[![Package Version](https://img.shields.io/hexpm/v/promgleam)](https://hex.pm/packages/promgleam)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/promgleam/)
 
 A [Prometheus](https://prometheus.io) client library for Gleam, based on [prometheus.erl](https://github.com/deadtrickster/prometheus.erl)
 
 ## Installation
 
 ```sh
-gleam add gleam_prometheus
+gleam add promgleam
 ```
 
 ## Examples
@@ -19,7 +19,7 @@ gleam add gleam_prometheus
 [(Source)](https://prometheus.io/docs/concepts/metric_types/#counter)
 
 ```gleam
-import gleam_prometheus/metrics/counter.{new_counter, inc_counter}
+import promgleam/metrics/counter.{new_counter, inc_counter}
 
 new_counter(
   registry: "default",
@@ -43,7 +43,7 @@ Gauges are typically used for measured values like temperatures or current memor
 [(Source)](https://prometheus.io/docs/concepts/metric_types/#gauge)
 
 ```gleam
-import gleam_prometheus/metrics/gauge.{new_gauge, set_gauge}
+import promgleam/metrics/gauge.{new_gauge, set_gauge}
 
 new_gauge(
   registry: "default",
@@ -66,7 +66,7 @@ inc_counter(
 [(Source)](https://prometheus.io/docs/concepts/metric_types/#histogram)
 
 ```gleam
-import gleam_prometheus/metrics/histogram.{new_histogram, observe_histogram}
+import promgleam/metrics/histogram.{new_histogram, observe_histogram}
 
 new_histogram(
   registry: "default",
@@ -89,7 +89,7 @@ observe_histogram(
 This library provides utility functions to create `buckets` for a Histogram:
 
 ```gleam
-import gleam_prometheus/buckets.{exponential, linear}
+import promgleam/buckets.{exponential, linear}
 
 exponential(start: 1.0, factor: 2, count: 5) // [1.0, 2.0, 4.0, 8.0, 10.0]
 linear(start: 1.0, step: 3.0, count: 4) // [1.0, 4.0, 7.0, 10.0]
@@ -101,11 +101,11 @@ This can be done by using one of the `print_as` functions:
 - `print_as_prometheus` - Returns a `BitArray` using the [Prometheus Protobuf format](https://github.com/prometheus/docs/blob/main/content/docs/instrumenting/exposition_formats.md#protobuf-format)
 
 ```gleam
-import gleam_prometheus/print.{print_as_text, print_as_protobuf}
+import promgleam/print.{print_as_text, print_as_protobuf}
 
 print_as_text(registry_name: "default")
 print_as_protobuf(registry_name: "default")
 ```
 
 ---
-Further documentation can be found at <https://hexdocs.pm/gleam_prometheus>.
+Further documentation can be found at <https://hexdocs.pm/promgleam>.

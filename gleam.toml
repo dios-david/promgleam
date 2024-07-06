@@ -1,8 +1,8 @@
-name = "gleam_prometheus"
+name = "promgleam"
 version = "0.1.0"
 description = "A Prometheus client library for Gleam"
 licences = ["Apache-2.0"]
-repository = { type = "github", user = "dios-david", repo = "gleam_prometheus" }
+repository = { type = "github", user = "dios-david", repo = "promgleam" }
 target = "erlang"
 
 [dependencies]
