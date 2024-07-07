@@ -1,7 +1,8 @@
 //// A histogram samples observations (usually things like request durations or response sizes)
 //// and counts them in configurable buckets. It also provides a sum of all observed values.
 
-import gleam/int.{to_string}
+import gleam/int.{to_float, to_string}
+import gleam/result.{replace}
 import gleam/string.{from_utf_codepoints}
 import promgleam/buckets.{type Buckets}
 import promgleam/internal/prometheus_error.{
@@ -91,4 +92,110 @@ pub fn observe_histogram(
       )
     _ -> Error("Unknown error")
   }
+}
+
+type Timestamp
+
+@external(erlang, "erlang", "timestamp")
+fn ffi_timestmap() -> Timestamp
+
+@external(erlang, "timer", "now_diff")
+fn ffi_time_diff(a: Timestamp, b: Timestamp) -> Int
+
+/// Measures a function execution time in milliseconds and observes that in the Histogram.
+///
+/// # Examples
+///
+/// ```gleam
+/// fn my_function_to_measure() {
+///   use <- measure_histogram(
+///     registry: "default",
+///     name: "function_execution_time",
+///     labels: [ "my_function_to_measure" ],
+///   )
+///
+///   // Do something slow here
+///
+///   "return_value"
+/// }
+///
+/// let assert Ok("return_value") = my_function_to_measure()
+/// ```
+///
+/// ```gleam
+/// fn my_function_to_measure() {
+///   // Do something slow here
+///
+///   "return_value"
+/// }
+///
+/// let assert Ok("return_value") =
+///   my_function_to_measure
+///   |> measure_histogram(
+///     registry: "default",
+///     name: "function_execution_time",
+///     labels: [ "my_function_to_measure" ],
+///     func: _
+///   )
+/// ```
+pub fn measure_histogram(
+  registry registry: String,
+  name name: String,
+  labels labels: List(String),
+  func func: fn() -> anything,
+) -> Result(anything, String) {
+  let start = ffi_timestmap()
+  let return_value = func()
+  let time_taken = to_float(ffi_time_diff(ffi_timestmap(), start))
+
+  replace(observe_histogram(registry, name, labels, time_taken), return_value)
+}
+
+/// Measures a function execution time in seconds and observes that in the Histogram.
+///
+/// # Examples
+///
+/// ```gleam
+/// fn my_function_to_measure() {
+///   use <- measure_histogram_seconds(
+///     registry: "default",
+///     name: "function_execution_time",
+///     labels: [ "my_function_to_measure" ],
+///   )
+///
+///   // Do something slow here
+///
+///   "return_value"
+/// }
+///
+/// let assert Ok("return_value") = my_function_to_measure()
+/// ```
+///
+/// ```gleam
+/// fn my_function_to_measure() {
+///   // Do something slow here
+///
+///   "return_value"
+/// }
+///
+/// let assert Ok("return_value") =
+///   my_function_to_measure
+///   |> measure_histogram_seconds(
+///     registry: "default",
+///     name: "function_execution_time",
+///     labels: [ "my_function_to_measure" ],
+///     func: _
+///   )
+/// ```
+pub fn measure_histogram_seconds(
+  registry registry: String,
+  name name: String,
+  labels labels: List(String),
+  func func: fn() -> anything,
+) -> Result(anything, String) {
+  let start = ffi_timestmap()
+  let return_value = func()
+  let time_taken = to_float(ffi_time_diff(ffi_timestmap(), start)) /. 1000.0
+
+  replace(observe_histogram(registry, name, labels, time_taken), return_value)
 }

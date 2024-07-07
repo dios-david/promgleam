@@ -84,6 +84,24 @@ observe_histogram(
 )
 ```
 
+Both `measure_histogram` and `measure_histogram_seconds` can be used to wrap a function to
+automatically observe the execution time whenever the function is invoked, rather than manually
+measuring it and reporting it with `observe_histogram`.
+
+```gleam
+import promgleam/metrics/histogram.{measure_histogram}
+
+fn my_function_to_measure() {
+  use <- measure_histogram(
+    registry: "default",
+    name: "function_execution_time",
+    labels: [ "my_function_to_measure" ],
+  )
+
+  // Do something slow here
+}
+```
+
 ### Generating buckets
 
 This library provides utility functions to create `buckets` for a Histogram:
