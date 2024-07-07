@@ -1,7 +1,7 @@
 *.beam
 *.ez
 .history
-/build
+**/build
 erl_crash.dump
 todo.md
 test/docs_test.gleam
