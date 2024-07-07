@@ -9,6 +9,7 @@ import promgleam/internal/prometheus_error.{
   type PrometheusError, InvalidBuckets, InvalidMetricArity, MfAlreadyExists,
   NoBuckets, UnknownMetric,
 }
+import promgleam/utils.{measure}
 
 @external(erlang, "ffi_histogram", "create_histogram")
 fn ffi_create_histogram(
@@ -94,14 +95,6 @@ pub fn observe_histogram(
   }
 }
 
-type Timestamp
-
-@external(erlang, "erlang", "timestamp")
-fn ffi_timestmap() -> Timestamp
-
-@external(erlang, "timer", "now_diff")
-fn ffi_time_diff(a: Timestamp, b: Timestamp) -> Int
-
 /// Measures a function execution time in milliseconds and observes that in the Histogram.
 ///
 /// # Examples
@@ -144,11 +137,12 @@ pub fn measure_histogram(
   labels labels: List(String),
   func func: fn() -> anything,
 ) -> Result(anything, String) {
-  let start = ffi_timestmap()
-  let return_value = func()
-  let time_taken = to_float(ffi_time_diff(ffi_timestmap(), start))
+  let #(time_taken, return_value) = measure(func)
 
-  replace(observe_histogram(registry, name, labels, time_taken), return_value)
+  replace(
+    observe_histogram(registry, name, labels, to_float(time_taken)),
+    return_value,
+  )
 }
 
 /// Measures a function execution time in seconds and observes that in the Histogram.
@@ -193,9 +187,11 @@ pub fn measure_histogram_seconds(
   labels labels: List(String),
   func func: fn() -> anything,
 ) -> Result(anything, String) {
-  let start = ffi_timestmap()
-  let return_value = func()
-  let time_taken = to_float(ffi_time_diff(ffi_timestmap(), start)) /. 1000.0
+  let #(time_taken, return_value) = measure(func)
+  let time_taken_in_seconds = to_float(time_taken) /. 1000.0
 
-  replace(observe_histogram(registry, name, labels, time_taken), return_value)
+  replace(
+    observe_histogram(registry, name, labels, time_taken_in_seconds),
+    return_value,
+  )
 }
